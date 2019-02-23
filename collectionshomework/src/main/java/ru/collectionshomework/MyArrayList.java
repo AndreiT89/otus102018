@@ -2,222 +2,190 @@ package ru.collectionshomework;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.Arrays;
 
-public class MyArrayList<E> implements List<E> {
-    private int DEFAULT_CAPACITY = 10;
-    private Object[] EMPTY_ARRAY = {};
-    private Object[] data;
-    private int size = 0;
+public class MyArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final Object[] EMPTY_ELEMENTDATA = {};
+    private Object[] array;
+
+    public MyArrayList(int initialCapacity) {
+        if (initialCapacity > 0) {
+            this.array = new Object[initialCapacity];
+        } else if (initialCapacity == 0) {
+            this.array = EMPTY_ELEMENTDATA;
+        } else {
+            throw new IllegalArgumentException("Illegal Capacity: " +
+                    initialCapacity);
+        }
+    }
 
     public MyArrayList() {
-        this.data = new Object[DEFAULT_CAPACITY];
+        this.array = new Object[DEFAULT_CAPACITY];
     }
 
-    @Override
     public int size() {
-        return size;
+        return array.length;
     }
 
-    @Override
     public boolean isEmpty() {
-        return size == 0;
+        return array.length == 0 ? false : true;
     }
 
-    @Override
     public boolean contains(Object o) {
+        return indexOf(o)>=0;
+    }
+
+    public Iterator iterator() {
+        return null;
+    }
+
+    public Object[] toArray() {
+        return new Object[0];
+    }
+
+    public boolean add(Object o) {
         return false;
     }
 
-    @Override
-    public Iterator<E> iterator() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Object[] toArray() {
-        return Arrays.copyOf(data, data.length);
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean add(E e) {
-        int oldSize = size;
-        int newSize = ++size;
-        Object[] newData = new Object[newSize];
-        for(int i = 0; i<size-1; i++){
-            newData[i] = this.data[i];
-        }
-        newData[oldSize] = e;
-        this.data = newData;
-        return true;
-    }
-
-    @Override
     public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
+        return false;
     }
 
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
+    public boolean addAll(Collection c) {
+        return false;
     }
 
-    @Override
-    public boolean addAll(Collection<? extends E> c) {
-        Object[] inbound = c.toArray();
-        System.arraycopy(inbound, 0, this.data, this.data.length, inbound.length);
-        return inbound.length != 0;
+    public boolean addAll(int index, Collection c) {
+        return false;
     }
 
-    @Override
-    public boolean addAll(int index, Collection<? extends E> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void clear() {
-        throw new UnsupportedOperationException();
+
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= data.length) {
-            throw new IndexOutOfBoundsException();
-        }
+    public Object get(int index) {
+        return null;
     }
 
-    @Override
-    public E get(int index) {
-        checkIndex(index);
-        return (E) this.data[index];
+    public Object set(int index, Object element) {
+        return null;
     }
 
-    @Override
-    public E set(int index, E element) {
-        checkIndex(index);
-        E old = (E) this.data[index];
-        this.data[index] = element;
-        return old;
+    public void add(int index, Object element) {
+
     }
 
-    @Override
-    public void add(int index, E element) {
-        throw new UnsupportedOperationException();
+    public Object remove(int index) {
+        return null;
     }
 
-    @Override
-    public E remove(int index) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public int indexOf(Object o) {
-        return 0;
+        if (o == null) {
+            for (int i = 0; i < array.length; i++)
+                if (array[i] == null)
+                    return i;
+        } else {
+            for (int i = 0; i < array.length; i++)
+                if (o.equals(array[i]))
+                    return i;
+        }
+        return -1;
     }
 
-    @Override
     public int lastIndexOf(Object o) {
         return 0;
     }
 
-    @Override
-    public ListIterator<E> listIterator() {
-        return new ListItr(0);
+    public ListIterator listIterator() {
+        return null;
     }
 
-    @Override
-    public ListIterator<E> listIterator(int index) {
-        throw new UnsupportedOperationException();
+    public ListIterator listIterator(int index) {
+        return null;
     }
 
-    @Override
-    public List<E> subList(int fromIndex, int toIndex) {
-        throw new UnsupportedOperationException();
+    public List subList(int fromIndex, int toIndex) {
+        return null;
     }
 
-    @Override
-    public void sort(Comparator<? super E> c) {
-        Arrays.sort((E[]) this.data, 0, this.data.length, c);
+    public boolean retainAll(Collection c) {
+        return false;
     }
 
-    private class ListItr implements ListIterator<E> {
-        private int cursor;
-        int lastRet = -1;
+    public boolean removeAll(Collection c) {
+        return false;
+    }
 
-        public ListItr(int index) {
-            cursor = index;
-        }
+    public boolean containsAll(Collection c) {
+        return false;
+    }
 
-        @Override
+    public Object[] toArray(Object[] a) {
+        return new Object[0];
+    }
+
+    private class Itr implements Iterator<T> {
+        int cursor;       // index of next element to return
+        int lastRet = -1; // index of last element returned; -1 if no such
+        int expectedModCount = modCount;
+
         public boolean hasNext() {
             return cursor != size;
         }
 
-        @Override
-        public E next() {
+        @SuppressWarnings("unchecked")
+        public T next() {
+            checkForComodification();
             int i = cursor;
-            if (i >= size) {
+            if (i >= size)
                 throw new NoSuchElementException();
-            }
+            Object[] elementData = MyArrayList.this.elementData;
+            if (i >= elementData.length)
+                throw new ConcurrentModificationException();
             cursor = i + 1;
-            return (E) MyArrayList.this.data[lastRet = i];
+            return (T) elementData[lastRet = i];
         }
 
-        @Override
-        public boolean hasPrevious() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E previous() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int nextIndex() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int previousIndex() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public void remove() {
-
-        }
-
-        @Override
-        public void set(E e) {
-            if (lastRet < 0) {
+            if (lastRet < 0)
                 throw new IllegalStateException();
-            }
+            checkForComodification();
 
             try {
-                MyArrayList.this.set(lastRet, e);
+                MyArrayList.this.remove(lastRet);
+                cursor = lastRet;
+                lastRet = -1;
+                expectedModCount = modCount;
             } catch (IndexOutOfBoundsException ex) {
-
+                throw new ConcurrentModificationException();
             }
         }
 
         @Override
-        public void add(E e) {
+        @SuppressWarnings("unchecked")
+        public void forEachRemaining(Consumer<? super T> consumer) {
+            Objects.requireNonNull(consumer);
+            final int size = MyArrayList.this.size;
+            int i = cursor;
+            if (i >= size) {
+                return;
+            }
+            final Object[] elementData = MyArrayList.this.elementData;
+            if (i >= elementData.length) {
+                throw new ConcurrentModificationException();
+            }
+            while (i != size && modCount == expectedModCount) {
+                consumer.accept((T) elementData[i++]);
+            }
+            // update once at end of iteration to reduce heap write traffic
+            cursor = i;
+            lastRet = i - 1;
+            checkForComodification();
+        }
 
+        final void checkForComodification() {
+            if (modCount != expectedModCount)
+                throw new ConcurrentModificationException();
         }
     }
 }
