@@ -49,6 +49,7 @@ public class MyArrayList<E> implements List<E> {
         int oldSize = size;
         int newSize = ++size;
         if (oldSize == data.length) {
+            newSize = newSize + 10;
             Object[] newData = new Object[newSize];
             for (int i = 0; i < size - 1; i++) {
                 newData[i] = this.data[i];
