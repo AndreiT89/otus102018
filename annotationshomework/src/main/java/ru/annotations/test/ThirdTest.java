@@ -1,4 +1,8 @@
-package ru.annotations;
+package ru.annotations.test;
+
+import ru.annotations.annotations.After;
+import ru.annotations.annotations.Before;
+import ru.annotations.annotations.Test;
 
 public class ThirdTest {
     @Before

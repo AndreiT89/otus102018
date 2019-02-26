@@ -1,13 +1,14 @@
 package ru.annotations;
 
-import java.lang.reflect.Method;
+import ru.annotations.test.FirstTest;
+import ru.annotations.test.SecondTest;
+import ru.annotations.test.ThirdTest;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.lang.reflect.InvocationTargetException;
+import ru.annotations.test.TestLauncher;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         List<Object> list = new ArrayList<>();
         FirstTest ft = new FirstTest();
         SecondTest st = new SecondTest();
@@ -15,37 +16,8 @@ public class Main {
         list.add(ft);
         list.add(st);
         list.add(tt);
-        launchBefore(list);
+        TestLauncher.launch(list);
     }
 
-    public static void launchBefore(List<?> objs) {
-        Iterator<?> itr = objs.listIterator();
-        while (itr.hasNext()) {
-            Object obj = itr.next();
-            Method[] clsMeth = obj.getClass().getDeclaredMethods();
-            for (Method meth : clsMeth) {
-                if (meth.getAnnotation(Before.class) != null) {
-                    try {
-                        meth.invoke(obj);
-                    } catch (IllegalAccessException ilEx) {
-                    } catch (InvocationTargetException invExc) {
-                    }
 
-                } else if (meth.getAnnotation(Test.class) != null) {
-                    try {
-                        meth.invoke(obj);
-                    } catch (IllegalAccessException ilEx) {
-                    } catch (InvocationTargetException invExc) {
-                    }
-                } else if (meth.getAnnotation(After.class) != null) {
-                    try {
-                        meth.invoke(obj);
-                    } catch (IllegalAccessException ilEx) {
-                    } catch (InvocationTargetException invExc) {
-                    }
-                }
-            }
-
-        }
-    }
 }
