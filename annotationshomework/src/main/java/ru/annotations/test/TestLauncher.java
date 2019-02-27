@@ -6,15 +6,19 @@ import ru.annotations.annotations.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 public class TestLauncher {
     public static void launch(Class cls) throws Exception {
-        Object obj = cls.getDeclaredConstructor().newInstance();
-        Method[] clsMeth = obj.getClass().getDeclaredMethods();
-        launchBefore(clsMeth, obj);
-        launchTest(clsMeth, obj);
-        launchAfter(clsMeth, obj);
+        Method[] clsMeth = cls.getClass().getDeclaredMethods();
+        for (Method meth : clsMeth) {
+            if (meth.getAnnotation(Test.class) != null) {
+                Object obj = cls.getDeclaredConstructor().newInstance();
+                launchBefore(clsMeth, obj);
+                launchTest(clsMeth, obj);
+                launchAfter(clsMeth, obj);
+            }
+        }
+
     }
 
     private static void launchBefore(Method[] clsMeth, Object obj) throws Exception {
@@ -23,11 +27,11 @@ public class TestLauncher {
                 try {
                     meth.invoke(obj);
                 } catch (IllegalAccessException ilEx) {
-                    launchAfter(clsMeth, obj);
                     throw new Exception("test preparation failed");
                 } catch (InvocationTargetException invExc) {
-                    launchAfter(clsMeth, obj);
                     throw new Exception("test preparation failed");
+                } finally {
+                    launchAfter(clsMeth, obj);
                 }
 
             }
@@ -40,11 +44,11 @@ public class TestLauncher {
                 try {
                     meth.invoke(obj);
                 } catch (IllegalAccessException ilEx) {
-                    launchAfter(clsMeth, obj);
                     throw new Exception("test run failed");
                 } catch (InvocationTargetException invExc) {
-                    launchAfter(clsMeth, obj);
                     throw new Exception("test run failed");
+                } finally {
+                    launchAfter(clsMeth, obj);
                 }
             }
         }
