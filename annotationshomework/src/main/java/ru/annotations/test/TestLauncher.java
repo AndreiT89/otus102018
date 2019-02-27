@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 
 public class TestLauncher {
     public static void launch(Class cls) throws Exception {
-        Method[] clsMeth = cls.getClass().getDeclaredMethods();
+        Method[] clsMeth = cls.getDeclaredMethods();
         for (Method meth : clsMeth) {
             if (meth.getAnnotation(Test.class) != null) {
                 Object obj = cls.getDeclaredConstructor().newInstance();
