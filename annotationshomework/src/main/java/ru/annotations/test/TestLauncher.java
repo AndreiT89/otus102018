@@ -16,7 +16,6 @@ public class TestLauncher {
                 try {
                     launchBefore(clsMeth, obj);
                     launchTest(meth, obj);
-                    launchAfter(clsMeth, obj);
                 } catch (InvocationTargetException invEx) {
                     System.out.println("test failed");
                 } catch (IllegalAccessException illExc) {
