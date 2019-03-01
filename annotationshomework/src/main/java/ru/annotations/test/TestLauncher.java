@@ -8,21 +8,23 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class TestLauncher {
-    public static void launch(Class cls) throws Exception {
+    public static void launch(Class cls) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
         Method[] clsMeth = cls.getDeclaredMethods();
         for (Method meth : clsMeth) {
             if (meth.getAnnotation(Test.class) != null) {
                 Object obj = cls.getDeclaredConstructor().newInstance();
                 try {
                     launchBefore(clsMeth, obj);
-
                     launchTest(meth, obj);
+                    launchAfter(clsMeth, obj);
                 } catch (InvocationTargetException invEx) {
                     System.out.println("test failed");
                 } catch (IllegalAccessException illExc) {
                     System.out.println("test failed");
+                } finally {
+                    launchAfter(clsMeth, obj);
                 }
-                launchAfter(clsMeth, obj);
+
             }
         }
 

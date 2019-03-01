@@ -11,8 +11,9 @@ public class SecondTest {
     }
 
     @Test
-    public void onTest() {
+    public void onTest()throws Exception {
         System.out.println("Second test");
+        throw new Exception("test");
     }
 
     @Test
