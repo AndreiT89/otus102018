@@ -13,57 +13,43 @@ public class TestLauncher {
         for (Method meth : clsMeth) {
             if (meth.getAnnotation(Test.class) != null) {
                 Object obj = cls.getDeclaredConstructor().newInstance();
-                launchBefore(clsMeth, obj);
-                launchTest(clsMeth, obj);
+                try {
+                    launchBefore(clsMeth, obj);
+
+                    launchTest(meth, obj);
+                } catch (InvocationTargetException invEx) {
+                    System.out.println("test failed");
+                } catch (IllegalAccessException illExc) {
+                    System.out.println("test failed");
+                }
                 launchAfter(clsMeth, obj);
             }
         }
 
     }
 
-    private static void launchBefore(Method[] clsMeth, Object obj) throws Exception {
+    private static void launchBefore(Method[] clsMeth, Object obj) throws InvocationTargetException, IllegalAccessException {
         for (Method meth : clsMeth) {
             if (meth.getAnnotation(Before.class) != null) {
-                try {
-                    meth.invoke(obj);
-                } catch (IllegalAccessException ilEx) {
-                    throw new Exception("test preparation failed");
-                } catch (InvocationTargetException invExc) {
-                    throw new Exception("test preparation failed");
-                } finally {
-                    launchAfter(clsMeth, obj);
-                }
+                meth.invoke(obj);
 
             }
         }
     }
 
-    private static void launchTest(Method[] clsMeth, Object obj) throws Exception {
-        for (Method meth : clsMeth) {
-            if (meth.getAnnotation(Test.class) != null) {
-                try {
-                    meth.invoke(obj);
-                } catch (IllegalAccessException ilEx) {
-                    throw new Exception("test run failed");
-                } catch (InvocationTargetException invExc) {
-                    throw new Exception("test run failed");
-                } finally {
-                    launchAfter(clsMeth, obj);
-                }
-            }
+    private static void launchTest(Method meth, Object obj) throws InvocationTargetException, IllegalAccessException {
+
+        if (meth.getAnnotation(Test.class) != null) {
+            meth.invoke(obj);
+
         }
+
     }
 
-    private static void launchAfter(Method[] clsMeth, Object obj) throws Exception {
+    private static void launchAfter(Method[] clsMeth, Object obj) throws InvocationTargetException, IllegalAccessException {
         for (Method meth : clsMeth) {
             if (meth.getAnnotation(After.class) != null) {
-                try {
-                    meth.invoke(obj);
-                } catch (IllegalAccessException ilEx) {
-                    throw new Exception("test closing failed");
-                } catch (InvocationTargetException invExc) {
-                    throw new Exception("test closing failed");
-                }
+                meth.invoke(obj);
             }
         }
     }

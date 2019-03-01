@@ -7,7 +7,7 @@ import ru.annotations.annotations.Test;
 public class ThirdTest {
     @Before
     public void onBefore() {
-        System.out.println("Before third test");
+        System.out.println("Before third test" + this.toString());
     }
 
     @Test
