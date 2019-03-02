@@ -4,7 +4,7 @@ public class Main {
     //Launch with VM options -Xmx2m -Xms2m
     public static void main(String[] args) throws InterruptedException {
         int maxIterations = 5000;
-        CacheEngine<Integer, String> cache = new CacheEngineImpl<>(1000, 1000);
+        CacheEngine<Integer, String> cache = new CacheEngineImpl<>(2000, 0 , 1000);
         for (int i = 0; i < maxIterations; i++) {
 
             cache.put(new CacheElement<>(i, "String" + i));
