@@ -1,6 +1,6 @@
 package ru.cachehomework;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.lang.ref.SoftReference;
@@ -8,7 +8,7 @@ import java.lang.ref.SoftReference;
 public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     private final int maxElements;
     private final long idleTimeMs;
-    private final Map<K, SoftReference<CacheElement<K, V>>> elements = new LinkedHashMap<>();
+    private final Map<K, SoftReference<CacheElement<K, V>>> elements = new HashMap<>();
     private final Timer timer = new Timer();
 
     private int hit = 0;
@@ -20,18 +20,7 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     }
 
     @Override
-    public void put(CacheElement<K,V> element) {
-//        if (elements.size() == maxElements) {
-//            while (elements.keySet().iterator().hasNext()){
-//                K firstkey = elements.keySet().iterator().next();
-//                CacheElement<K,V> oldElement = elements.get(firstkey).get();
-//                if (oldElement.getLastAccessTime()>=idleTimeMs){
-//                    System.gc();
-//                }
-//
-//            }
-//
-//        }
+    public void put(CacheElement<K, V> element) {
 
         K key = element.getKey();
         elements.put(key, new SoftReference<>(element));
@@ -39,11 +28,18 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     @Override
     public CacheElement<K, V> get(K key) {
-        CacheElement<K, V> element = elements.get(key).get();
-        if (element != null) {
-            hit++;
-            element.setAccessed();
-        } else {
+        CacheElement<K, V> element = null;
+        try {
+            element = elements.get(key).get();
+
+
+            if (element != null) {
+                hit++;
+                element.setAccessed();
+            } else {
+                miss++;
+            }
+        } catch (NullPointerException npe) {
             miss++;
         }
         return element;
