@@ -26,7 +26,10 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         if (elements.size() == maxElements) {
             long currTime = System.currentTimeMillis();
             elements.entrySet().removeIf(entry ->
-                   entry.getValue() == null || currTime - entry.getValue().get().getLastAccessTime() >= idleTimeMs || currTime - entry.getValue().get().getCreationTime() >= lifeTimeMs
+                    entry.getValue() == null || entry.getValue().get() == null ||
+                            currTime - entry.getValue().get().getLastAccessTime() >= idleTimeMs ||
+                            currTime - entry.getValue().get().getCreationTime() >= lifeTimeMs ||
+                            (lifeTimeMs == 0 && idleTimeMs == 0)
             );
         }
         K key = element.getKey();
