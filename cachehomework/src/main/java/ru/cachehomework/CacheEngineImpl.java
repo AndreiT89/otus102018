@@ -24,22 +24,14 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     @Override
     public void put(CacheElement<K, V> element) {
         if (elements.size() == maxElements) {
-            while (elements.entrySet().iterator().hasNext()) {
-                Map.Entry oldEntry = elements.entrySet().iterator().next();
-                SoftReference<CacheElement<K, V>> oldElement = null;
-                try {
-                    oldElement = (SoftReference<CacheElement<K, V>>) oldEntry.getValue();
-                    if (oldElement.get().getLastAccessTime() >= idleTimeMs || oldElement.get().getCreationTime() >= lifeTimeMs) {
-                        elements.remove(oldEntry.getKey());
-                    }
-                } catch (NullPointerException npe) {
-                    elements.remove(oldEntry.getKey());
-
-                }
-            }
+            long currTime = System.currentTimeMillis();
+            elements.entrySet().removeIf(entry ->
+                    currTime - entry.getValue().get().getLastAccessTime() >= idleTimeMs || currTime - entry.getValue().get().getCreationTime() >= lifeTimeMs
+            );
         }
         K key = element.getKey();
         elements.put(key, new SoftReference<>(element));
+
     }
 
     @Override
