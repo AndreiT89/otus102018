@@ -17,11 +17,12 @@ public class Cassete {
         return amount;
     }
 
-    public void substractAmount(int sum) throws Exception {
+    public int substractAmount(int sum)  {
         if (this.amount >= sum) {
             this.amount = this.amount - sum;
+            return 0;
         } else {
-            throw new Exception("requested amount is not available");
+           return  -1;
         }
     }
 

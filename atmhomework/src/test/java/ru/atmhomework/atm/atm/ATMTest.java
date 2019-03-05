@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ATMTest {
     @Test
-    public void get() throws Exception {
+    public void get() {
         HashMap<FaceValue, Cassete> storage = new HashMap<>();
         storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
         storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 2));
@@ -24,7 +24,18 @@ public class ATMTest {
         atm.get(123);
         assertEquals(4, atm.checkAvailableAmount());
     }
+    @Test
+    public void getAbscentAmount() {
+        HashMap<FaceValue, Cassete> storage = new HashMap<>();
+        storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
+        storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 0));
+        storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
 
+        ATM atm = new ATM(storage);
+        assertEquals(107, atm.checkAvailableAmount());
+        atm.get(123);
+        assertEquals(4, atm.checkAvailableAmount());
+    }
     @Test
     public void put() {
         HashMap<FaceValue, Cassete> storage = new HashMap<>();
@@ -34,8 +45,11 @@ public class ATMTest {
 
         ATM atm = new ATM(storage);
         assertEquals(127, atm.checkAvailableAmount());
-
-        atm.put(123);
+        HashMap<FaceValue, Cassete> sum = new HashMap<>();
+        sum.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 3));
+        sum.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 2));
+        sum.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
+        atm.put(sum);
         assertEquals(250, atm.checkAvailableAmount());
 
     }
