@@ -30,4 +30,8 @@ public class Cassete {
         this.amount += sum;
     }
 
+    public int getSum(){
+        return this.amount * faceValue.getFaceValue();
+    }
+
 }

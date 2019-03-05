@@ -28,13 +28,13 @@ public class ATMTest {
     public void getAbscentAmount() {
         HashMap<FaceValue, Cassete> storage = new HashMap<>();
         storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
-        storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 0));
-        storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
+        storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 30));
+        storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 0));
 
         ATM atm = new ATM(storage);
-        assertEquals(107, atm.checkAvailableAmount());
-        atm.get(123);
-        assertEquals(4, atm.checkAvailableAmount());
+        assertEquals(307, atm.checkAvailableAmount());
+        atm.get(223);
+        assertEquals(284, atm.checkAvailableAmount());
     }
     @Test
     public void put() {
