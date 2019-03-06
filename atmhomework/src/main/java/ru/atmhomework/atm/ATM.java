@@ -17,17 +17,24 @@ public class ATM {
             requestedSum.put(FaceValue.ONES, new Cassete(FaceValue.ONES, sum % 10));
             requestedSum.put(FaceValue.TENS, new Cassete(FaceValue.TENS, sum % 100 / 10));
             requestedSum.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, sum / 100));
-            int result = this.storage.get(FaceValue.HUNDREDS).substractAmount(requestedSum.get(FaceValue.HUNDREDS).getAmount());
-            if (result == -1) {
-                result = this.storage.get(FaceValue.TENS).substractAmount(requestedSum.get(FaceValue.HUNDREDS).getAmount() * 10);
-            }
-            result = this.storage.get(FaceValue.TENS).substractAmount(requestedSum.get(FaceValue.TENS).getAmount());
-            if (result == -1) {
-                result = this.storage.get(FaceValue.ONES).substractAmount(requestedSum.get(FaceValue.TENS).getAmount() * 10);
-            }
-            result = this.storage.get(FaceValue.ONES).substractAmount(requestedSum.get(FaceValue.ONES).getAmount());
+            int result = withdrawSum(requestedSum.get(FaceValue.HUNDREDS), FaceValue.TENS);
+
+            result = withdrawSum(requestedSum.get(FaceValue.TENS), FaceValue.ONES);
+            ;
+            result = withdrawSum(requestedSum.get(FaceValue.ONES), null);
+            ;
         }
         return requestedSum;
+    }
+
+    private int withdrawSum(Cassete requestedSum, FaceValue lowerFace) {
+        int result = this.storage.get(requestedSum.getFaceValue()).substractAmount(requestedSum.getAmount());
+        if (result == -1 && lowerFace != null) {
+            result = this.storage.get(lowerFace).substractAmount(requestedSum.getAmount() * 10);
+        } else if (result == -1 && lowerFace == null) {
+            result = -1;
+        }
+        return result;
     }
 
     public void put(HashMap<FaceValue, Integer> sum) {
