@@ -34,7 +34,7 @@ public class ATMTest {
         ATM atm = new ATM(storage);
         assertEquals(307, atm.checkAvailableAmount());
         atm.get(223);
-        assertEquals(284, atm.checkAvailableAmount());
+        assertEquals(84, atm.checkAvailableAmount());
     }
     @Test
     public void put() {
@@ -45,10 +45,10 @@ public class ATMTest {
 
         ATM atm = new ATM(storage);
         assertEquals(127, atm.checkAvailableAmount());
-        HashMap<FaceValue, Cassete> sum = new HashMap<>();
-        sum.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 3));
-        sum.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 2));
-        sum.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
+        HashMap<FaceValue, Integer> sum = new HashMap<>();
+        sum.put(FaceValue.ONES, 3);
+        sum.put(FaceValue.TENS, 2);
+        sum.put(FaceValue.HUNDREDS, 1);
         atm.put(sum);
         assertEquals(250, atm.checkAvailableAmount());
 

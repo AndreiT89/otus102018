@@ -17,27 +17,25 @@ public class ATM {
             requestedSum.put(FaceValue.ONES, new Cassete(FaceValue.ONES, sum % 10));
             requestedSum.put(FaceValue.TENS, new Cassete(FaceValue.TENS, sum % 100 / 10));
             requestedSum.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, sum / 100));
-            for (FaceValue val : FaceValue.values()) {
-                Cassete entry = this.storage.get(val);
-                if (entry != null) {
-                    int result = entry.substractAmount(requestedSum.get(val).getAmount());
-                    if (result < 0) {
-                        requestedSum.remove(val);
-                    }
-                } else {
-                    requestedSum.remove(val);
-                }
+            int result = this.storage.get(FaceValue.HUNDREDS).substractAmount(requestedSum.get(FaceValue.HUNDREDS).getAmount());
+            if (result == -1) {
+                result = this.storage.get(FaceValue.TENS).substractAmount(requestedSum.get(FaceValue.HUNDREDS).getAmount() * 10);
             }
+            result = this.storage.get(FaceValue.TENS).substractAmount(requestedSum.get(FaceValue.TENS).getAmount());
+            if (result == -1) {
+                result = this.storage.get(FaceValue.ONES).substractAmount(requestedSum.get(FaceValue.TENS).getAmount() * 10);
+            }
+            result = this.storage.get(FaceValue.ONES).substractAmount(requestedSum.get(FaceValue.ONES).getAmount());
         }
         return requestedSum;
     }
 
-    public void put(HashMap<FaceValue, Cassete> sum) {
+    public void put(HashMap<FaceValue, Integer> sum) {
         Iterator itr = this.storage.keySet().iterator();
         while (itr.hasNext()) {
             FaceValue key = (FaceValue) itr.next();
             Cassete entry = this.storage.get(key);
-            entry.addAmount(sum.get(key).getAmount());
+            entry.addAmount(sum.get(key));
         }
     }
 
