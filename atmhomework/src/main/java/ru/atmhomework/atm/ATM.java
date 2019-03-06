@@ -13,16 +13,20 @@ public class ATM {
 
     public HashMap<FaceValue, Cassete> get(int sum) {
         HashMap<FaceValue, Cassete> requestedSum = new HashMap<>();
+        int result = 0;
         if (sum <= checkAvailableAmount()) {
             requestedSum.put(FaceValue.ONES, new Cassete(FaceValue.ONES, sum % 10));
             requestedSum.put(FaceValue.TENS, new Cassete(FaceValue.TENS, sum % 100 / 10));
             requestedSum.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, sum / 100));
-            int result = withdrawSum(requestedSum.get(FaceValue.HUNDREDS), FaceValue.TENS);
+            result = withdrawSum(requestedSum.get(FaceValue.HUNDREDS), FaceValue.TENS);
 
             result = withdrawSum(requestedSum.get(FaceValue.TENS), FaceValue.ONES);
-            ;
+
             result = withdrawSum(requestedSum.get(FaceValue.ONES), null);
-            ;
+
+        }
+        if (result == -1) {
+            requestedSum = null;
         }
         return requestedSum;
     }
