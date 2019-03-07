@@ -32,9 +32,22 @@ public class ATM {
     }
 
     private int withdrawSum(Cassete requestedSum, FaceValue lowerFace) {
-        int result = this.storage.get(requestedSum.getFaceValue()).substractAmount(requestedSum.getAmount());
-        if (result == -1 && lowerFace != null) {
-            result = this.storage.get(lowerFace).substractAmount(requestedSum.getAmount() * 10);
+        int result = 0;
+        int withdrawal = 0;
+        for (int i = 0; i < requestedSum.getAmount(); i++) {
+            result = this.storage.get(requestedSum.getFaceValue()).substractAmount(1);
+            if (result == -1) {
+                break;
+            } else {
+                withdrawal++;
+            }
+        }
+
+        if (withdrawal < requestedSum.getAmount() && lowerFace != null) {
+            for (int i = 0; i < requestedSum.getAmount() - withdrawal; i++) {
+                result = this.storage.get(lowerFace).substractAmount(10);
+            }
+
         } else if (result == -1 && lowerFace == null) {
             result = -1;
         }
@@ -42,7 +55,7 @@ public class ATM {
     }
 
     public void put(HashMap<FaceValue, Integer> sum) {
-        Iterator itr = this.storage.keySet().iterator();
+        Iterator itr = sum.keySet().iterator();
         while (itr.hasNext()) {
             FaceValue key = (FaceValue) itr.next();
             Cassete entry = this.storage.get(key);

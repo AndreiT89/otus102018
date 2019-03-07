@@ -24,6 +24,7 @@ public class ATMTest {
         atm.get(123);
         assertEquals(4, atm.checkAvailableAmount());
     }
+
     @Test
     public void getAbscentAmount() {
         HashMap<FaceValue, Cassete> storage = new HashMap<>();
@@ -36,6 +37,20 @@ public class ATMTest {
         atm.get(223);
         assertEquals(84, atm.checkAvailableAmount());
     }
+
+    @Test
+    public void getDifferentFaceValues() {
+        HashMap<FaceValue, Cassete> storage = new HashMap<>();
+        storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
+        storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 30));
+        storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
+
+        ATM atm = new ATM(storage);
+        assertEquals(407, atm.checkAvailableAmount());
+        atm.get(323);
+        assertEquals(84, atm.checkAvailableAmount());
+    }
+
     @Test
     public void put() {
         HashMap<FaceValue, Cassete> storage = new HashMap<>();
