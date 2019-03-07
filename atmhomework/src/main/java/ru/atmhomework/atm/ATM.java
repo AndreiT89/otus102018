@@ -25,9 +25,6 @@ public class ATM {
             result = withdrawSum(requestedSum.get(FaceValue.ONES), null);
 
         }
-        if (result == -1) {
-            requestedSum = null;
-        }
         return requestedSum;
     }
 
