@@ -1,57 +1,32 @@
 package ru.atmhomework.atm;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.TreeMap;
 
 public class ATM {
-    private HashMap<FaceValue, Cassete> storage;
+    private TreeMap<FaceValue, Cassete> storage;
 
-    public ATM(HashMap<FaceValue, Cassete> cassetes) {
+    public ATM(TreeMap<FaceValue, Cassete> cassetes) {
         this.storage = cassetes;
     }
 
-    public HashMap<FaceValue, Cassete> get(int sum) {
-        HashMap<FaceValue, Cassete> requestedSum = new HashMap<>();
-        int result = 0;
-        if (sum <= checkAvailableAmount()) {
-            requestedSum.put(FaceValue.ONES, new Cassete(FaceValue.ONES, sum % 10));
-            requestedSum.put(FaceValue.TENS, new Cassete(FaceValue.TENS, sum % 100 / 10));
-            requestedSum.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, sum / 100));
-            result = withdrawSum(requestedSum.get(FaceValue.HUNDREDS), FaceValue.TENS);
-
-            result = withdrawSum(requestedSum.get(FaceValue.TENS), FaceValue.ONES);
-
-            result = withdrawSum(requestedSum.get(FaceValue.ONES), null);
-
+    public TreeMap<FaceValue, Integer> get(Integer sum) {
+        TreeMap<FaceValue, Integer> requestedSum = new TreeMap<>();
+        int remainder = sum.intValue();
+        Iterator itr = storage.descendingKeySet().iterator();
+        while(itr.hasNext()){
+            FaceValue value = (FaceValue)itr.next();
+            Integer max = remainder/value.getFaceValue();
+            Integer totalInCassette = storage.get(value).getAmount();
+            Integer sumIssue = Integer.min(max,totalInCassette);
+            requestedSum.put(value,sumIssue);
+            storage.get(value).substractAmount(sumIssue);
+            remainder=remainder-sumIssue*value.getFaceValue();
         }
         return requestedSum;
     }
 
-    private int withdrawSum(Cassete requestedSum, FaceValue lowerFace) {
-        int result = 0;
-        int withdrawal = 0;
-        for (int i = 0; i < requestedSum.getAmount(); i++) {
-            result = this.storage.get(requestedSum.getFaceValue()).substractAmount(1);
-            if (result == -1) {
-                break;
-            } else {
-                withdrawal++;
-            }
-        }
-
-        if (withdrawal < requestedSum.getAmount() && lowerFace != null) {
-            for (int i = 0; i < requestedSum.getAmount() - withdrawal; i++) {
-                result = this.storage.get(lowerFace).substractAmount(10);
-            }
-
-        } else if (result == -1 && lowerFace == null) {
-            result = -1;
-        }
-        return result;
-    }
-
-    public void put(HashMap<FaceValue, Integer> sum) {
+    public void put(TreeMap<FaceValue, Integer> sum) {
         Iterator itr = sum.keySet().iterator();
         while (itr.hasNext()) {
             FaceValue key = (FaceValue) itr.next();

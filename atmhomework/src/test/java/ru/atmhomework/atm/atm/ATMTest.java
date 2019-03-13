@@ -1,19 +1,18 @@
 package ru.atmhomework.atm.atm;
 
-import org.junit.Before;
 import org.junit.Test;
 import ru.atmhomework.atm.ATM;
 import ru.atmhomework.atm.Cassete;
 import ru.atmhomework.atm.FaceValue;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 
 public class ATMTest {
     @Test
     public void get() {
-        HashMap<FaceValue, Cassete> storage = new HashMap<>();
+        TreeMap<FaceValue, Cassete> storage = new TreeMap<>();
         storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
         storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 2));
         storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
@@ -27,7 +26,7 @@ public class ATMTest {
 
     @Test
     public void getAbscentAmount() {
-        HashMap<FaceValue, Cassete> storage = new HashMap<>();
+        TreeMap<FaceValue, Cassete> storage = new TreeMap<>();
         storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
         storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 30));
         storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 0));
@@ -40,7 +39,8 @@ public class ATMTest {
 
     @Test
     public void getDifferentFaceValues() {
-        HashMap<FaceValue, Cassete> storage = new HashMap<>();
+
+        TreeMap<FaceValue, Cassete> storage = new TreeMap<>();
         storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
         storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 30));
         storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
@@ -52,7 +52,7 @@ public class ATMTest {
     }
     @Test
     public void getLargeAmount(){
-        HashMap<FaceValue, Cassete> storage = new HashMap<>();
+        TreeMap<FaceValue, Cassete> storage = new TreeMap<>();
         storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
         storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 30));
         storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
@@ -60,18 +60,18 @@ public class ATMTest {
         ATM atm = new ATM(storage);
         assertEquals(407, atm.checkAvailableAmount());
         atm.get(423);
-        assertEquals(407, atm.checkAvailableAmount());
+        assertEquals(0, atm.checkAvailableAmount());
     }
     @Test
     public void put() {
-        HashMap<FaceValue, Cassete> storage = new HashMap<>();
+        TreeMap<FaceValue, Cassete> storage = new TreeMap<>();
         storage.put(FaceValue.ONES, new Cassete(FaceValue.ONES, 7));
         storage.put(FaceValue.TENS, new Cassete(FaceValue.TENS, 2));
         storage.put(FaceValue.HUNDREDS, new Cassete(FaceValue.HUNDREDS, 1));
 
         ATM atm = new ATM(storage);
         assertEquals(127, atm.checkAvailableAmount());
-        HashMap<FaceValue, Integer> sum = new HashMap<>();
+        TreeMap<FaceValue, Integer> sum = new TreeMap<>();
         sum.put(FaceValue.ONES, 3);
         sum.put(FaceValue.TENS, 2);
         sum.put(FaceValue.HUNDREDS, 1);
